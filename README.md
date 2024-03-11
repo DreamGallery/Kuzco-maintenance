@@ -7,7 +7,7 @@ In addition, it will also restart Kuzco worker after running continuously for on
 ### Run
 ```
 git clone https://github.com/DreamGallery/Kuzco-maintenance.git
-cd Kuzco-maintenance && chmod +x kz-maint.sh
+cp Kuzco-maintenance/kz-maint.sh kz-maint.sh && chmod +x kz-maint.sh
 nohup ./kz-maint.sh >> start-kz.log 2>&1 &
 ```
 The output of the script is in the `start-kz.log` file, and the worker's is in `kz-worker.log`.  
