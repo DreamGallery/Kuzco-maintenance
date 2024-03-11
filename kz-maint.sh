@@ -32,7 +32,7 @@ while true; do
                         sleep 1
                         runtime=$(($runtime+1))
                         echo "$(date "+%Y-%m-%d %H:%M:%S") Running for ${runtime}s"
-                        if [[ "$runtime" -ge '3600' ]]; then
+                        if [[ "$runtime" -ge '1800' ]]; then
                                 echo "$(date "+%Y-%m-%d %H:%M:%S") Restarting scheduledly..."
                                 break
                         fi
