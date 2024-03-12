@@ -17,3 +17,10 @@ Old log files will be moved to the `kzlog` folder.
 ```
 pkill -f "kz-maint.sh" && pkill -f "kuzco"
 ```
+
+### Discord alert
+If you want to receive alert messages in your discord, please create a `.env` file in the same path as the script,  
+and add your discord webhook link like this
+```
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/
+```
