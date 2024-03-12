@@ -1,11 +1,18 @@
 #!/bin/bash
 
+# Directory check
 [[ -d kzlog ]] || mkdir kzlog
 
-# Discord webhook URL
-DISCORD_WEBHOOK_URL="YOUR_DISCORD_WEBHOOK_URL_HERE"
+# Load Discord webhook URL from .env file
+if [[ -f .env ]]; then
+    export $(cat .env | xargs)
+fi
 
 send_discord_notification() {
+    if [[ -z "$DISCORD_WEBHOOK_URL" ]]; then
+        echo "Discord webhook URL not set. Skipping notification."
+        return 0
+    fi
     message="$1"
     curl -H "Content-Type: application/json" -X POST -d "{\"content\":\"$message\"}" "$DISCORD_WEBHOOK_URL"
 }
