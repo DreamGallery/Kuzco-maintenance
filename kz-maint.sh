@@ -10,7 +10,7 @@ fi
 
 send_discord_notification() {
     if [[ -z "$DISCORD_WEBHOOK_URL" ]]; then
-        echo "Discord webhook URL not set. Skipping notification."
+        echo "$(date "+%Y-%m-%d %H:%M:%S") Discord webhook URL not set. Skipping notification."
         return 0
     fi
     message="$1"
@@ -18,14 +18,23 @@ send_discord_notification() {
 }
 
 while true; do
-    pidlist=$(ps -ef | grep kuzco | grep -v grep | awk '{print $2}')
-    if [[ -n "$pidlist" ]]; then
-        echo "$(date "+%Y-%m-%d %H:%M:%S") Kuzco task pids: $(echo ${pidlist[@]} | tr '\n' ' ')"
-        for pid in $pidlist; do
-            sudo kill -9 $pid
-            echo "$(date "+%Y-%m-%d %H:%M:%S") Killing process with PID: $pid"
-        done
-    fi
+    while true; do
+        pidlist=$(ps -ef | grep kuzco | grep -v grep | awk '{print $2}')
+        if [[ -n "$pidlist" ]]; then
+            echo "$(date "+%Y-%m-%d %H:%M:%S") Kuzco task pids: $(echo ${pidlist[@]} | tr '\n' ' ')"
+            for pid in $pidlist; do
+                sudo kill -9 $pid
+                echo "$(date "+%Y-%m-%d %H:%M:%S") Killing process with PID: $pid"
+            done
+        fi
+        portpidlist=$(sudo lsof -i :14444 |grep -v "PID" | awk '{print $2}'|uniq)
+        if [[ -n "$portpidlist" ]]; then
+            echo "$(date "+%Y-%m-%d %H:%M:%S") Waiting for port 14444 to be released"
+            sleep 10
+        else
+            break
+        fi
+    done
 
     echo "$(date "+%Y-%m-%d %H:%M:%S") Starting..."
     sudo kuzco worker start >> kz-worker.log 2>&1 &
